@@ -1,0 +1,19 @@
+{
+  "powershell": {
+    "command": "pwsh",
+    "args": [
+      "-NoLogo",
+      "-NoProfile",
+      "-File",
+      "${CLAUDE_PLUGIN_ROOT}/scripts/start-pses.ps1"
+    ],
+    "extensionToLanguage": {
+      ".ps1": "powershell",
+      ".psm1": "powershell",
+      ".psd1": "powershell"
+    },
+    "startupTimeout": 120000,
+    "shutdownTimeout": 20000,
+    "maxRestarts": 3
+  }
+}

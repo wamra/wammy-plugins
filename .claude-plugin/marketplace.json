@@ -1,0 +1,31 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "wammy-plugins",
+  "metadata": {
+    "description": "wamra's Claude Code plugins \u2014 language servers and code-intelligence tooling",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "wamra"
+  },
+  "plugins": [
+    {
+      "name": "powershell-lsp",
+      "version": "0.2.0",
+      "source": "./plugins/powershell-lsp",
+      "description": "PowerShell language server for Claude Code via Microsoft's PowerShell Editor Services (PSES) \u2014 cross-file definitions, references, hover, rename for .ps1/.psm1/.psd1. Auto-installs PSES on first run; macOS, Linux, Windows.",
+      "category": "development",
+      "tags": [
+        "powershell",
+        "pwsh",
+        "ps1",
+        "lsp",
+        "language-server",
+        "pses"
+      ],
+      "author": {
+        "name": "wamra"
+      }
+    }
+  ]
+}

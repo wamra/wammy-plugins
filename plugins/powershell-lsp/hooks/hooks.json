@@ -1,0 +1,16 @@
+{
+  "description": "Pre-install PowerShell Editor Services on session start",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoLogo -NoProfile -NonInteractive -File \"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-pses.ps1\"",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}
