@@ -1,7 +1,7 @@
 {
   "name": "powershell-lsp",
   "description": "PowerShell language server for Claude Code via Microsoft's PowerShell Editor Services — cross-file definitions, references, hover, rename for .ps1/.psm1/.psd1. Auto-installs PSES on first run. Works on macOS, Linux, and Windows.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "wamra"
   },

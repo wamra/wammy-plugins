@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "powershell-lsp",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "source": "./plugins/powershell-lsp",
       "description": "PowerShell language server for Claude Code via Microsoft's PowerShell Editor Services (PSES) \u2014 cross-file definitions, references, hover, rename for .ps1/.psm1/.psd1. Auto-installs PSES on first run; macOS, Linux, Windows.",
       "category": "development",
