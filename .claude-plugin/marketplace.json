@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "wammy-plugins",
   "metadata": {
-    "description": "wamra's Claude Code plugins \u2014 language servers and code-intelligence tooling",
+    "description": "wamra's Claude Code plugins — language servers and code-intelligence tooling",
     "version": "1.0.0"
   },
   "owner": {
@@ -13,7 +13,7 @@
       "name": "powershell-lsp",
       "version": "0.3.0",
       "source": "./plugins/powershell-lsp",
-      "description": "PowerShell language server for Claude Code via Microsoft's PowerShell Editor Services (PSES) \u2014 cross-file definitions, references, hover, rename for .ps1/.psm1/.psd1. Auto-installs PSES on first run; macOS, Linux, Windows.",
+      "description": "PowerShell language server for Claude Code via Microsoft's PowerShell Editor Services (PSES) — cross-file definitions, references, hover, rename for .ps1/.psm1/.psd1. Auto-installs PSES on first run; macOS, Linux, Windows.",
       "category": "development",
       "tags": [
         "powershell",
@@ -22,6 +22,65 @@
         "lsp",
         "language-server",
         "pses"
+      ],
+      "author": {
+        "name": "wamra"
+      }
+    },
+    {
+      "name": "session-index",
+      "version": "0.1.0",
+      "source": {
+        "source": "github",
+        "repo": "wamra/session-index",
+        "ref": "plugin"
+      },
+      "description": "Lossless, searchable index of your Claude Code sessions: hooks keep it current, a skill searches it. Binaries for macOS, Linux and Windows are bundled.",
+      "category": "development",
+      "tags": [
+        "sessions",
+        "search",
+        "archive",
+        "embeddings"
+      ],
+      "author": {
+        "name": "wamra"
+      }
+    },
+    {
+      "name": "session-index-search",
+      "version": "0.1.0",
+      "source": {
+        "source": "git-subdir",
+        "url": "git@github.com:wamra/session-index.git",
+        "path": "plugins/session-index-search",
+        "ref": "plugin"
+      },
+      "description": "Search and read archived sessions inside Claude Code: search and show tools and a /sessions command. Binaries bundled.",
+      "category": "development",
+      "tags": [
+        "sessions",
+        "search",
+        "mcp"
+      ],
+      "author": {
+        "name": "wamra"
+      }
+    },
+    {
+      "name": "code-index-search",
+      "version": "0.1.0",
+      "source": {
+        "source": "github",
+        "repo": "wamra/code-index",
+        "ref": "plugin"
+      },
+      "description": "Semantic code index for a repo: search and show tools and a /code command, plus a code-search skill. Binaries for macOS, Linux and Windows are bundled.",
+      "category": "development",
+      "tags": [
+        "code-search",
+        "symbols",
+        "embeddings"
       ],
       "author": {
         "name": "wamra"
