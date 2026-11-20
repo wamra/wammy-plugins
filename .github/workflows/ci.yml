@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Installs every plugin from this marketplace the way a user does and checks that the bundled
+  # binaries arrived and run. Needs the secret PLUGINS_READ_TOKEN: a read-only token that can
+  # clone wamra/session-index and wamra/code-index while those repositories are private.
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Let git read the private plugin repositories
+        run: git config --global url."https://x-access-token:${{ secrets.PLUGINS_READ_TOKEN }}@github.com/".insteadOf "git@github.com:" && git config --global --add url."https://x-access-token:${{ secrets.PLUGINS_READ_TOKEN }}@github.com/".insteadOf "https://github.com/"
+      - run: claude plugin validate .
+      - run: claude plugin marketplace add "$PWD"
+      - run: |
+          for p in powershell-lsp session-index session-index-search code-index-search; do
+            claude plugin install "$p@wammy-plugins"
+          done
+          claude plugin list
+      - name: Bundled binaries are there, executable, and run
+        run: |
+          cache="${CLAUDE_CODE_PLUGIN_CACHE_DIR:-$HOME/.claude/plugins}/cache/wammy-plugins"
+          for d in session-index session-index-search code-index-search; do
+            test -d "$cache/$d" || { echo "missing $d"; exit 1; }
+          done
+          si=$(find "$cache/session-index" -path '*/bin/session-index' -not -path '*/plugins/*' | head -1)
+          ci=$(find "$cache/code-index-search" -path '*/bin/code-index' | head -1)
+          test -n "$si" && test -n "$ci"
+          sh "$si" version
+          sh "$ci" version
+          # the executable bit must survive the install copy
+          test -x "$si" && echo "launcher is executable"
