@@ -22,6 +22,8 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      PLUGINS_READ_TOKEN: ${{ secrets.PLUGINS_READ_TOKEN }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
@@ -29,15 +31,24 @@ jobs:
           node-version: 22
       - run: npm install -g @anthropic-ai/claude-code
       - name: Let git read the private plugin repositories
-        run: git config --global url."https://x-access-token:${{ secrets.PLUGINS_READ_TOKEN }}@github.com/".insteadOf "git@github.com:" && git config --global --add url."https://x-access-token:${{ secrets.PLUGINS_READ_TOKEN }}@github.com/".insteadOf "https://github.com/"
+        if: env.PLUGINS_READ_TOKEN != ''
+        run: |
+          git config --global url."https://x-access-token:${PLUGINS_READ_TOKEN}@github.com/".insteadOf "git@github.com:"
+          git config --global --add url."https://x-access-token:${PLUGINS_READ_TOKEN}@github.com/".insteadOf "https://github.com/"
+      - name: Private plugins are not tested without the token
+        if: env.PLUGINS_READ_TOKEN == ''
+        run: echo "::warning::PLUGINS_READ_TOKEN is not set, so session-index and code-index-search are not installed or tested."
       - run: claude plugin validate .
       - run: claude plugin marketplace add "$PWD"
       - run: |
-          for p in powershell-lsp session-index session-index-search code-index-search; do
+          plugins=powershell-lsp
+          [ -n "$PLUGINS_READ_TOKEN" ] && plugins="$plugins session-index session-index-search code-index-search"
+          for p in $plugins; do
             claude plugin install "$p@wammy-plugins"
           done
           claude plugin list
       - name: Bundled binaries are there, executable, and run
+        if: env.PLUGINS_READ_TOKEN != ''
         run: |
           cache="${CLAUDE_CODE_PLUGIN_CACHE_DIR:-$HOME/.claude/plugins}/cache/wammy-plugins"
           for d in session-index session-index-search code-index-search; do
