@@ -29,13 +29,12 @@
     },
     {
       "name": "session-index",
-      "version": "0.1.0",
       "source": {
         "source": "github",
         "repo": "wamra/session-index",
         "ref": "plugin"
       },
-      "description": "Lossless, searchable index of your Claude Code sessions: hooks keep it current, a skill searches it. Binaries for macOS, Linux and Windows are bundled.",
+      "description": "Lossless, searchable index of your Claude Code sessions: hooks keep it current, a skill and search and show tools query it, /sessions prints hits. Binaries for macOS, Linux and Windows are bundled.",
       "category": "development",
       "tags": [
         "sessions",
@@ -48,28 +47,7 @@
       }
     },
     {
-      "name": "session-index-search",
-      "version": "0.1.0",
-      "source": {
-        "source": "git-subdir",
-        "url": "git@github.com:wamra/session-index.git",
-        "path": "plugins/session-index-search",
-        "ref": "plugin"
-      },
-      "description": "Search and read archived sessions inside Claude Code: search and show tools and a /sessions command. Binaries bundled.",
-      "category": "development",
-      "tags": [
-        "sessions",
-        "search",
-        "mcp"
-      ],
-      "author": {
-        "name": "wamra"
-      }
-    },
-    {
       "name": "code-index-search",
-      "version": "0.1.0",
       "source": {
         "source": "github",
         "repo": "wamra/code-index",

@@ -18,8 +18,7 @@ Restart Claude Code after installing (plugins and their LSP servers load at sess
 | Plugin | What it does |
 |---|---|
 | [`powershell-lsp`](plugins/powershell-lsp) | PowerShell language server (Microsoft PSES) — cross-file go-to-definition, find-references, hover, rename for `.ps1`/`.psm1`/`.psd1`. Auto-downloads PSES on first run. macOS / Linux / Windows. |
-| [`session-index`](https://github.com/wamra/session-index) | Hooks that keep a lossless, searchable archive of your Claude Code sessions, plus a search skill. Binaries bundled. |
-| [`session-index-search`](https://github.com/wamra/session-index) | `search` and `show` tools and a `/sessions` command over that archive. Binaries bundled. |
+| [`session-index`](https://github.com/wamra/session-index) | Hooks that keep a lossless, searchable archive of your Claude Code sessions, a search skill, `search` and `show` tools and a `/sessions` command. Binaries bundled. |
 | [`code-index-search`](https://github.com/wamra/code-index) | `search` and `show` tools, a `/code` command and a skill over a repo's semantic code index. Binaries bundled. |
 
 ## Layout

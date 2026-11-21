@@ -42,7 +42,7 @@ jobs:
       - run: claude plugin marketplace add "$PWD"
       - run: |
           plugins=powershell-lsp
-          [ -n "$PLUGINS_READ_TOKEN" ] && plugins="$plugins session-index session-index-search code-index-search"
+          [ -n "$PLUGINS_READ_TOKEN" ] && plugins="$plugins session-index code-index-search"
           for p in $plugins; do
             claude plugin install "$p@wammy-plugins"
           done
@@ -51,11 +51,11 @@ jobs:
         if: env.PLUGINS_READ_TOKEN != ''
         run: |
           cache="${CLAUDE_CODE_PLUGIN_CACHE_DIR:-$HOME/.claude/plugins}/cache/wammy-plugins"
-          for d in session-index session-index-search code-index-search; do
+          for d in session-index code-index-search; do
             test -d "$cache/$d" || { echo "missing $d"; exit 1; }
           done
-          si=$(find "$cache/session-index" -path '*/bin/session-index' -not -path '*/plugins/*' | head -1)
-          ci=$(find "$cache/code-index-search" -path '*/bin/code-index' | head -1)
+          si=$(find "$cache/session-index" -maxdepth 3 -path '*/bin/session-index' | head -1)
+          ci=$(find "$cache/code-index-search" -maxdepth 3 -path '*/bin/code-index' | head -1)
           test -n "$si" && test -n "$ci"
           sh "$si" version
           sh "$ci" version
