@@ -63,6 +63,26 @@
       "author": {
         "name": "wamra"
       }
+    },
+    {
+      "name": "specs-index",
+      "source": {
+        "source": "github",
+        "repo": "wamra/specs-index",
+        "ref": "plugin"
+      },
+      "description": "Index of your BRD, FDS and Gherkin specs: search, trace requirements to designs and scenarios, find coverage gaps. Commands, a skill and MCP tools; binaries for macOS, Linux and Windows are bundled.",
+      "category": "development",
+      "tags": [
+        "requirements",
+        "gherkin",
+        "traceability",
+        "search",
+        "embeddings"
+      ],
+      "author": {
+        "name": "wamra"
+      }
     }
   ]
 }

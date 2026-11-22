@@ -41,6 +41,7 @@ jobs:
       - run: claude plugin validate .
       - run: claude plugin marketplace add "$PWD"
       - run: |
+          # TODO: add specs-index here (and to the binary check below) once wamra/specs-index is published with a `plugin` branch; installing it earlier fails the clone.
           plugins=powershell-lsp
           [ -n "$PLUGINS_READ_TOKEN" ] && plugins="$plugins session-index code-index-search"
           for p in $plugins; do
