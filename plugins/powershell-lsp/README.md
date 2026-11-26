@@ -15,7 +15,7 @@ PSES also publishes diagnostics from its bundled PSScriptAnalyzer, provided PSSc
 
 ## Requirements
 
-- **PowerShell 7+** (`pwsh`) on PATH — [install instructions](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
+- **PowerShell 7+** (`pwsh`) on PATH. Windows PowerShell 5.1 (`powershell.exe`) is not supported: the plugin only ever launches `pwsh`, so with 5.1 alone the language server cannot start. — [install instructions](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
 - **PowerShell 7.4.6+ for diagnostics** — the PSScriptAnalyzer bundled with current PSES releases does not load in older versions; navigation still works, but no diagnostics are published. The `SessionStart` hook prints a warning when this is the case.
 - Claude Code **2.1.50+** (uses modern `.lsp.json` fields like `startupTimeout`)
 - macOS, Linux, or Windows
@@ -28,7 +28,13 @@ That's it. **PSES itself is installed automatically**: a `SessionStart` hook dow
 | Linux | `$XDG_CACHE_HOME/claude-powershell-lsp` (or `~/.cache/...`) |
 | Windows | `%LOCALAPPDATA%\claude-powershell-lsp` |
 
-The download prefers `curl` (endpoint-security tools often block .NET networking while allowing curl) and falls back to `Invoke-WebRequest`. If the session-start install didn't run, the LSP launcher installs on first use instead.
+Downloads are HTTPS-only (curl runs with `--proto '=https' --proto-redir '=https'`, and non-HTTPS mirror URLs are refused). The download prefers `curl` (endpoint-security tools often block .NET networking while allowing curl) and falls back to `Invoke-WebRequest`. If the session-start install didn't run, the LSP launcher installs on first use instead.
+
+## Integrity of the download
+
+By default the plugin asks the GitHub API for the release's asset `digest` (a SHA-256 that GitHub publishes for each release asset), downloads the zip from that release tag, and installs it only if the hash matches; a missing digest or a mismatch fails the install (nothing is extracted). Setting `CLAUDE_PSES_SHA256` replaces the API digest with your own. Not verified: a zip you supply yourself via `CLAUDE_PSES_ZIP` or `CLAUDE_PSES_URL` is trusted as given unless `CLAUDE_PSES_SHA256` is also set. This is a check against the digest GitHub reports, not a publisher signature. Archive entries are checked to stay inside the install directory before extraction.
+
+Install steps are serialized with a lock file, so the session-start hook and the language-server launcher cannot install at the same time. The hook is bounded (150 s hook timeout, short download timeouts) and reports failures in one line without blocking the session.
 
 ## PSES version
 
@@ -40,7 +46,7 @@ To pin a release, set `CLAUDE_PSES_VERSION`:
 export CLAUDE_PSES_VERSION=4.7.0   # or v4.7.0; unset or "latest" to track the newest
 ```
 
-While pinned, only that exact version is used (it is downloaded if missing), no update checks are made, and nothing is pruned. Add `CLAUDE_PSES_SHA256` to also verify the downloaded zip. Update checks are also skipped when `CLAUDE_PSES_URL` or `CLAUDE_PSES_ZIP` is set.
+While pinned, only that exact version is used (it is downloaded if missing), no update checks are made, and nothing is pruned. The SHA-256 is taken from the GitHub API for that tag; `CLAUDE_PSES_SHA256` overrides it. Update checks are also skipped when `CLAUDE_PSES_URL` or `CLAUDE_PSES_ZIP` is set.
 
 ## Install
 
@@ -56,9 +62,9 @@ Restart Claude Code (plugins and their LSP servers load at session start), then 
 | Variable | Purpose |
 |---|---|
 | `CLAUDE_PSES_VERSION` | Pin an exact PSES release (e.g. `4.7.0`); unset or `latest` tracks the newest |
-| `CLAUDE_PSES_SHA256` | Expected SHA-256 of the PSES zip; the install fails on a mismatch |
+| `CLAUDE_PSES_SHA256` | Expected SHA-256 of the PSES zip, replacing the digest from the GitHub API; the install fails on a mismatch. When tracking latest, it fails again on each new release |
 | `CLAUDE_PSES_PATH` | Use a custom PSES install/cache directory |
-| `CLAUDE_PSES_URL` | Download PSES from a mirror instead of GitHub releases |
+| `CLAUDE_PSES_URL` | Download PSES from an HTTPS mirror instead of GitHub releases (not digest-verified unless `CLAUDE_PSES_SHA256` is set) |
 | `CLAUDE_PSES_ZIP` | Air-gapped installs: path to a local `PowerShellEditorServices.zip` |
 
 ## Known limitations (inherited from PSES)
@@ -70,6 +76,7 @@ Restart Claude Code (plugins and their LSP servers load at session start), then 
 
 ## Troubleshooting
 
+- **"pwsh: command not found" or the server never starts** — install PowerShell 7+ and make sure `pwsh` is on the PATH that Claude Code sees. The session-start hook prints a one-line notice when `pwsh` is missing (this guard assumes the hook runs through a POSIX shell; on Windows that is untested). The language-server entry itself cannot print a message, because it is the `pwsh` launch that fails.
 - **"No LSP server available for file type: .ps1"** — the plugin loads at session start; restart Claude Code after installing.
 - **First call slow / "server is starting"** — PSES startup takes a few seconds (longer on first-ever run while downloading); retry.
 - **No diagnostics** — check the `SessionStart` hook output for "diagnostics are off"; on PowerShell older than 7.4.6 the bundled PSScriptAnalyzer fails to load and PSES stays silent. Update PowerShell.
