@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoLogo -NoProfile -NonInteractive -File \"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-pses.ps1\"",
-            "timeout": 300
+            "command": "command -v pwsh >/dev/null 2>&1 || { echo \"powershell-lsp: pwsh (PowerShell 7+) was not found on PATH; install it to enable the PowerShell language server.\"; exit 0; }; pwsh -NoLogo -NoProfile -NonInteractive -File \"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-pses.ps1\"",
+            "timeout": 150
           }
         ]
       }
