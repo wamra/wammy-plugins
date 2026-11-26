@@ -43,12 +43,19 @@ jobs:
       - run: claude plugin marketplace add "$PWD"
       - run: |
           # specs-index is added here (and to the binary check below) once its repository is published.
-          plugins=powershell-lsp
+          plugins="powershell-lsp bash-lsp"
           [ -n "$PLUGINS_READ_TOKEN" ] && plugins="$plugins session-index code-index-search"
           for p in $plugins; do
             claude plugin install "$p@wammy-plugins"
           done
           claude plugin list
+      - name: The bash-lsp binary is there, executable, and runs
+        run: |
+          cache="${CLAUDE_CODE_PLUGIN_CACHE_DIR:-$HOME/.claude/plugins}/cache/wammy-plugins"
+          wb=$(find "$cache/bash-lsp" -maxdepth 3 -path '*/bin/bash-lsp' | head -1)
+          test -n "$wb" || { echo "missing bash-lsp launcher"; exit 1; }
+          test -x "$wb" && echo "launcher is executable"
+          sh "$wb" version
       - name: Bundled binaries are there, executable, and run
         if: env.PLUGINS_READ_TOKEN != ''
         run: |

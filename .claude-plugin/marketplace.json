@@ -83,6 +83,27 @@
       "author": {
         "name": "wamra"
       }
+    },
+    {
+      "name": "bash-lsp",
+      "source": {
+        "source": "github",
+        "repo": "wamra/bash-lsp",
+        "ref": "plugin"
+      },
+      "description": "Bash language server for Claude Code: go to definition, references, rename with refusals when safety is unproven, call hierarchy, hover, completion and diagnostics for .sh/.bash/.bats/.ksh. Reads scripts and never runs them. Binaries for macOS, Linux and Windows are bundled.",
+      "category": "development",
+      "tags": [
+        "bash",
+        "shell",
+        "sh",
+        "lsp",
+        "language-server",
+        "rename"
+      ],
+      "author": {
+        "name": "wamra"
+      }
     }
   ]
 }
