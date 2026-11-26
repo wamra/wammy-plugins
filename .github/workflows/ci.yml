@@ -11,8 +11,9 @@ permissions:
 
 jobs:
   # Installs every plugin from this marketplace the way a user does and checks that the bundled
-  # binaries arrived and run. Needs the secret PLUGINS_READ_TOKEN: a read-only token that can
-  # clone wamra/session-index and wamra/code-index while those repositories are private.
+  # binaries arrived and run. powershell-lsp is local and always tested. The other plugins come
+  # from separate repositories that are not public yet; they are tested only when the secret
+  # PLUGINS_READ_TOKEN (a read-only token that can clone them) is set, and skipped otherwise.
   install:
     strategy:
       fail-fast: false
@@ -25,8 +26,8 @@ jobs:
     env:
       PLUGINS_READ_TOKEN: ${{ secrets.PLUGINS_READ_TOKEN }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
       - run: npm install -g @anthropic-ai/claude-code
@@ -41,7 +42,7 @@ jobs:
       - run: claude plugin validate .
       - run: claude plugin marketplace add "$PWD"
       - run: |
-          # TODO: add specs-index here (and to the binary check below) once wamra/specs-index is published with a `plugin` branch; installing it earlier fails the clone.
+          # specs-index is added here (and to the binary check below) once its repository is published.
           plugins=powershell-lsp
           [ -n "$PLUGINS_READ_TOKEN" ] && plugins="$plugins session-index code-index-search"
           for p in $plugins; do
